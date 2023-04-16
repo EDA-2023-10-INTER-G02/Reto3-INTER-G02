@@ -39,6 +39,7 @@ from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import selectionsort as se
 from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
+import datetime
 assert cf
 
 """
@@ -55,7 +56,14 @@ def new_data_structs():
     manera vacía para posteriormente almacenar la información.
     """
     #TODO: Inicializar las estructuras de datos
-    pass
+    data_structs = {"accidentes": None,
+                    "dateIndex": None,
+                    }
+    
+    data_structs["accidentes"] = lt.newList("ARRAY_LIST")
+    data_structs["dateIndex"] = om.newMap(omaptype="RBT",
+                                      comparefunction=compareDates)
+    return data_structs
 
 
 # Funciones para agregar informacion al modelo
@@ -64,12 +72,32 @@ def add_data(data_structs, data):
     """
     Función para agregar nuevos elementos a la lista
     """
+    #print(data)
+    updateDateIndex(data_structs["dateIndex"], data)
+    return data_structs
+
     #TODO: Crear la función para agregar elementos a una lista
-    pass
 
-
+def updateDateIndex(map, accidente):
+    '''occuraccident = accidente["FECHA_OCURRENCIA_ACC"]
+    accidentdate = datetime.datetime.strptime(occuraccident, "%Y/%m/%d")
+    entry = om.get(map, accidentdate.date())
+    if entry is None:
+        datentry = newDataEntry(accidente)
+        om.put(map, accidentdate.date(), datentry)
+    else:
+        datentry = me.getValue(entry)'''
+    #addDateIndex(datentry, accidente)
+    return map
 # Funciones para creacion de datos
-
+def newDataEntry(accidente):
+    entry = {"lstaccidentes":None,"clase":None, "gravedad":None}
+    entry["lstaccidentes"] = lt.newList("ARRAY_LIST", compareDates)
+    entry["clase"] = mp.newMap()
+    entry["gravedad"] = mp.newMap()
+    lt.addLast(entry["lstaccidentes"], accidente)
+    return entry
+    
 def new_data(id, info):
     """
     Crea una nueva estructura para modelar los datos
@@ -93,7 +121,7 @@ def data_size(data_structs):
     Retorna el tamaño de la lista de datos
     """
     #TODO: Crear la función para obtener el tamaño de una lista
-    pass
+    return lt.size(data_structs["accidentes"])
 
 
 def req_1(data_structs):
@@ -169,6 +197,13 @@ def compare(data_1, data_2):
     #TODO: Crear función comparadora de la lista
     pass
 
+def compareDates(date1, date2):
+    if (date1 == date2):
+        return 0
+    elif (date1 > date2):
+        return 1
+    else:
+        return -1
 # Funciones de ordenamiento
 
 
