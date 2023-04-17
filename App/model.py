@@ -72,21 +72,21 @@ def add_data(data_structs, data):
     """
     Función para agregar nuevos elementos a la lista
     """
-    #print(data)
     updateDateIndex(data_structs["dateIndex"], data)
+    lt.addLast(data_structs["accidentes"],data)
     return data_structs
 
     #TODO: Crear la función para agregar elementos a una lista
 
 def updateDateIndex(map, accidente):
-    '''occuraccident = accidente["FECHA_OCURRENCIA_ACC"]
+    occuraccident = accidente["FECHA_OCURRENCIA_ACC"]
     accidentdate = datetime.datetime.strptime(occuraccident, "%Y/%m/%d")
     entry = om.get(map, accidentdate.date())
     if entry is None:
         datentry = newDataEntry(accidente)
         om.put(map, accidentdate.date(), datentry)
     else:
-        datentry = me.getValue(entry)'''
+        datentry = me.getValue(entry)
     #addDateIndex(datentry, accidente)
     return map
 # Funciones para creacion de datos

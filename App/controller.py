@@ -48,8 +48,8 @@ def load_data(control, filename):
     """
     filename = cf.data_dir + filename
     input_file = csv.DictReader(open(filename, encoding="utf-8"),delimiter=",")
+    
     for accidente in input_file:
-        print(accidente)
         model.add_data(control, accidente)
         
     return control

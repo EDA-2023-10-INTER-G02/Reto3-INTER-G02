@@ -29,7 +29,7 @@ from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 assert cf
-from tabulate import tabulate
+from tabulate import tabulate as tab
 import traceback
 
 """
@@ -63,20 +63,42 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_data(control,filename):
     """
     Carga los datos
     """
     #TODO: Realizar la carga de datos
-    controller.load_data(control,"siniestros//datos_siniestralidad-mini.csv")
+    controller.load_data(control,"siniestros/datos_siniestralidad-" +filename)
 
 
-def print_data(control, id):
+def print_caragaDatos(control,sublista):
     """
         Función que imprime un dato dado su ID
     """
+    list_of_lists = []
+    headerss = ["CODIGO_ACCIDENTE","FECHA_HORA_ACC","LOCALIDAD","DIRECCION","GRAVEDAD","CLASE_ACC","LATITUD","LONGITUD"]
+    
+    for accidente in lt.iterator(sublista):
+        lista_acc = []
+        lista_acc.append(accidente["CODIGO_ACCIDENTE"])
+        lista_acc.append(accidente["FECHA_HORA_ACC"])
+        lista_acc.append(accidente["LOCALIDAD"])
+        lista_acc.append(accidente["DIRECCION"])
+        lista_acc.append(accidente["GRAVEDAD"])
+        lista_acc.append(accidente["CLASE_ACC"])
+        lista_acc.append(accidente["LATITUD"])
+        lista_acc.append(accidente["LONGITUD"])
+        list_of_lists.append(lista_acc)
+    print(tab(list_of_lists,tablefmt='grid',headers=headerss))
+    
+    
     #TODO: Realizar la función para imprimir un elemento
     pass
+
+def opciones_tamaño():
+    tamano = int(input("Elija el tamaño del archivo:\n1.Small (1%)\n2.5%\n3.10%\n4.20%\n5.30%\n6.50%\n7.80%\n8.Large (100%)\n"))
+    tamanos=["small.csv","5pct.csv","10pct.csv","20pct.csv","30pct.csv","50pct.csv","80pct.csv","large.csv"]
+    return tamanos[tamano-1]
 
 def print_req_1(control):
     """
@@ -157,10 +179,16 @@ if __name__ == "__main__":
         inputs = input('Seleccione una opción para continuar\n')
         try:
             if int(inputs) == 1:
+                filename = opciones_tamaño()
                 print("Cargando información de los archivos ....\n")
-                load_data(control)
-                print(control)
-                #print("Archivos cargados: " + str(controller.get_size(data)))
+                load_data(control,filename)
+                print("Archivos cargados: " + str(controller.get_size(control)))
+                first_3 = lt.subList(control["accidentes"],1,3)
+                last_3 = lt.subList(control["accidentes"],lt.size(control["accidentes"])-2,3)
+                print("\nLos primeros tres registros de accidentes cargados fueron: ")
+                print_caragaDatos(control,first_3)
+                print("\nLos últimos tres registros de accidentes cargados fueron: ")
+                print_caragaDatos(control,last_3)
                 
             elif int(inputs) == 2:
                 print_req_1(control)
