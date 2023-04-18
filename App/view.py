@@ -31,6 +31,8 @@ from DISClib.DataStructures import mapentry as me
 assert cf
 from tabulate import tabulate as tab
 import traceback
+default_limit = 1000 
+sys.setrecursionlimit(default_limit*10)
 
 """
 La vista se encarga de la interacción con el usuario
@@ -67,11 +69,11 @@ def load_data(control,filename):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
+    #TO DO: Realizar la carga de datos
     controller.load_data(control,"siniestros/datos_siniestralidad-" +filename)
 
 
-def print_caragaDatos(control,sublista):
+def print_caragaDatos(sublista):
     """
         Función que imprime un dato dado su ID
     """
@@ -91,9 +93,7 @@ def print_caragaDatos(control,sublista):
         list_of_lists.append(lista_acc)
     print(tab(list_of_lists,tablefmt='grid',headers=headerss))
     
-    
-    #TODO: Realizar la función para imprimir un elemento
-    pass
+    #TO DO: Realizar la función para imprimir un elemento
 
 def opciones_tamaño():
     tamano = int(input("Elija el tamaño del archivo:\n1.Small (1%)\n2.5%\n3.10%\n4.20%\n5.30%\n6.50%\n7.80%\n8.Large (100%)\n"))
@@ -105,7 +105,9 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    fecha_inicio = input("Ingrese una fecha de inicio: ")
+    fecha_fin = input("Ingrese una fecha de fin: ")
+    controller.req_1(control,fecha_inicio,fecha_fin)
 
 
 def print_req_2(control):
@@ -186,12 +188,13 @@ if __name__ == "__main__":
                 first_3 = lt.subList(control["accidentes"],1,3)
                 last_3 = lt.subList(control["accidentes"],lt.size(control["accidentes"])-2,3)
                 print("\nLos primeros tres registros de accidentes cargados fueron: ")
-                print_caragaDatos(control,first_3)
+                print_caragaDatos(first_3)
                 print("\nLos últimos tres registros de accidentes cargados fueron: ")
-                print_caragaDatos(control,last_3)
+                print_caragaDatos(last_3)
                 
             elif int(inputs) == 2:
                 print_req_1(control)
+                
 
             elif int(inputs) == 3:
                 print_req_2(control)

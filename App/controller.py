@@ -79,11 +79,12 @@ def get_size(control):
     return model.data_size(control)
 
 
-def req_1(control):
+def req_1(control, fecha_inicio, fecha_fin):
     """
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
+    model.req_1(control,fecha_inicio,fecha_fin)
     pass
 
 

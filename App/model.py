@@ -87,23 +87,35 @@ def updateDateIndex(map, accidente):
         om.put(map, accidentdate.date(), datentry)
     else:
         datentry = me.getValue(entry)
-    #addDateIndex(datentry, accidente)
+    addDateIndex(datentry, accidente)
     return map
+
 # Funciones para creacion de datos
 def newDataEntry(accidente):
     entry = {"lstaccidentes":None,"clase":None, "gravedad":None}
     entry["lstaccidentes"] = lt.newList("ARRAY_LIST", compareDates)
-    entry["clase"] = mp.newMap()
-    entry["gravedad"] = mp.newMap()
-    lt.addLast(entry["lstaccidentes"], accidente)
+    #TODO: sortear ["lstaccidentes"] por hora
+    entry["clase"] = mp.newMap(maptype='PROBING')
+    #entry["gravedad"] = mp.newMap()
     return entry
     
-def new_data(id, info):
+def addDateIndex(dataentry, accidente):
     """
     Crea una nueva estructura para modelar los datos
     """
     #TODO: Crear la función para estructurar los datos
-    pass
+    lst = dataentry["lstaccidentes"]
+    lt.addLast(lst, accidente)
+    claseIndex = dataentry["clase"]
+    claseEntry = mp.get(claseIndex, accidente["CLASE_ACC"])
+    if claseEntry is None:
+        lista_acc_clase = lt.newList(datastructure='ARRAY_LIST')
+        lt.addLast(lista_acc_clase,accidente)
+        mp.put(claseIndex,accidente["CLASE_ACC"],lista_acc_clase)
+    else:
+        entry = me.getValue(claseEntry)
+        lt.addLast(entry,accidente)
+        
 
 
 # Funciones de consulta
@@ -124,10 +136,15 @@ def data_size(data_structs):
     return lt.size(data_structs["accidentes"])
 
 
-def req_1(data_structs):
+def req_1(data_structs,fecha_inicio,fecha_fin):
     """
     Función que soluciona el requerimiento 1
     """
+    key_value = om.get(data_structs["dateIndex"],datetime.date(2022,9,18))
+    entry = me.getValue(key_value)
+    lista_acc_dia = entry["lstaccidentes"]
+    print(entry)
+
     # TODO: Realizar el requerimiento 1
     pass
 
@@ -227,3 +244,9 @@ def sort(data_structs):
     """
     #TODO: Crear función de ordenamiento
     pass
+
+"""mapa = om.newMap(omaptype="RBT")
+om.put(mapa,"bad bunny","agosto")
+llave_valor = om.get(mapa,"bad bunny")
+valor = me.getValue(llave_valor)
+print(valor)"""
