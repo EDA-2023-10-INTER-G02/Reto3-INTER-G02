@@ -94,12 +94,32 @@ def print_caragaDatos(sublista):
     print(tab(list_of_lists,tablefmt='grid',headers=headerss))
     
     #TO DO: Realizar la función para imprimir un elemento
-
+    
 def opciones_tamaño():
     tamano = int(input("Elija el tamaño del archivo:\n1.Small (1%)\n2.5%\n3.10%\n4.20%\n5.30%\n6.50%\n7.80%\n8.Large (100%)\n"))
     tamanos=["small.csv","5pct.csv","10pct.csv","20pct.csv","30pct.csv","50pct.csv","80pct.csv","large.csv"]
     return tamanos[tamano-1]
 
+def print_tabla_req_1(lista):
+    lst_of_lsts = []
+    headerss = ["CODIGO_ACCIDENTE","FECHA_HORA_ACC","DIA_OCURRENCIA_ACC","LOCALIDAD","DIRECCION","GRAVEDAD","CLASE_ACC","LATITUD","LONGITUD"]
+    for accidente_lst in lt.iterator(lista):
+        for accidente in lt.iterator(accidente_lst):
+            lista_acc = []
+            lista_acc.append(accidente["CODIGO_ACCIDENTE"])
+            lista_acc.append(accidente["FECHA_HORA_ACC"])
+            lista_acc.append(accidente["DIA_OCURRENCIA_ACC"])
+            lista_acc.append(accidente["LOCALIDAD"])
+            lista_acc.append(accidente["DIRECCION"])
+            lista_acc.append(accidente["GRAVEDAD"])
+            lista_acc.append(accidente["CLASE_ACC"])
+            lista_acc.append(accidente["LATITUD"])
+            lista_acc.append(accidente["LONGITUD"])
+            lst_of_lsts.append(lista_acc)
+        
+    print(tab(lst_of_lsts,tablefmt='grid',headers=headerss,maxcolwidths=13))
+        
+    
 def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
@@ -107,8 +127,9 @@ def print_req_1(control):
     # TODO: Imprimir el resultado del requerimiento 1
     fecha_inicio = input("Ingrese una fecha de inicio: ")
     fecha_fin = input("Ingrese una fecha de fin: ")
-    controller.req_1(control,fecha_inicio,fecha_fin)
-
+    total_acc, lst_acc = controller.req_1(control,fecha_inicio,fecha_fin)
+    print("\nHay " +str(total_acc)+" accidentes registrados entre " +fecha_inicio+ " y " + fecha_fin)
+    print_tabla_req_1(lst_acc)
 
 def print_req_2(control):
     """

@@ -48,12 +48,13 @@ def load_data(control, filename):
     """
     filename = cf.data_dir + filename
     input_file = csv.DictReader(open(filename, encoding="utf-8"),delimiter=",")
-    
+    time_i = get_time()
     for accidente in input_file:
         model.add_data(control, accidente)
-        
+    time_f = get_time()
+    total_time = delta_time(time_i,time_f)
     return control
-    # TODO: Realizar la carga de datos
+    # TO DO: Realizar la carga de datos
 
 
 # Funciones de ordenamiento
@@ -84,8 +85,7 @@ def req_1(control, fecha_inicio, fecha_fin):
     Retorna el resultado del requerimiento 1
     """
     # TODO: Modificar el requerimiento 1
-    model.req_1(control,fecha_inicio,fecha_fin)
-    pass
+    return model.req_1(control,fecha_inicio,fecha_fin) 
 
 
 def req_2(control):

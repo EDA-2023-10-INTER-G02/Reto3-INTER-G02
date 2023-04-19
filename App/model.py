@@ -116,8 +116,6 @@ def addDateIndex(dataentry, accidente):
         entry = me.getValue(claseEntry)
         lt.addLast(entry,accidente)
         
-
-
 # Funciones de consulta
 
 def get_data(data_structs, id):
@@ -140,13 +138,19 @@ def req_1(data_structs,fecha_inicio,fecha_fin):
     """
     Función que soluciona el requerimiento 1
     """
-    key_value = om.get(data_structs["dateIndex"],datetime.date(2022,9,18))
-    entry = me.getValue(key_value)
-    lista_acc_dia = entry["lstaccidentes"]
-    print(entry)
-
     # TODO: Realizar el requerimiento 1
-    pass
+    fecha_i = datetime.datetime.strptime(fecha_inicio, "%Y/%m/%d")
+    fecha_in = fecha_i.date()
+    fecha_f = datetime.datetime.strptime(fecha_fin, "%Y/%m/%d")
+    fecha_fi = fecha_f.date()
+    entry = om.values(data_structs["dateIndex"], fecha_in, fecha_fi)
+    total_accidentes = 0
+    lst_accidentes = lt.newList('ARRAY_LIST')
+    for date in lt.iterator(entry):
+        total_accidentes += lt.size(date["lstaccidentes"])
+        lt.addLast(lst_accidentes,date["lstaccidentes"])
+        
+    return total_accidentes,lst_accidentes
 
 
 def req_2(data_structs):
