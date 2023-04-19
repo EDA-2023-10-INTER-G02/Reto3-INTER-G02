@@ -124,7 +124,7 @@ def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
+    # TO DO: Imprimir el resultado del requerimiento 1
     fecha_inicio = input("Ingrese una fecha de inicio: ")
     fecha_fin = input("Ingrese una fecha de fin: ")
     total_acc, lst_acc = controller.req_1(control,fecha_inicio,fecha_fin)
