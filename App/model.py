@@ -94,7 +94,6 @@ def updateDateIndex(map, accidente):
 def newDataEntry(accidente):
     entry = {"lstaccidentes":None,"clase":None, "gravedad":None}
     entry["lstaccidentes"] = lt.newList("ARRAY_LIST", compareDates)
-    #TODO: sortear ["lstaccidentes"] por hora
     entry["clase"] = mp.newMap(maptype='PROBING')
     #entry["gravedad"] = mp.newMap()
     return entry
@@ -106,6 +105,7 @@ def addDateIndex(dataentry, accidente):
     #TODO: Crear la función para estructurar los datos
     lst = dataentry["lstaccidentes"]
     lt.addLast(lst, accidente)
+    merg.sort(lst,compareHour)
     claseIndex = dataentry["clase"]
     claseEntry = mp.get(claseIndex, accidente["CLASE_ACC"])
     if claseEntry is None:
@@ -153,13 +153,30 @@ def req_1(data_structs,fecha_inicio,fecha_fin):
     return total_accidentes,lst_accidentes
 
 
-def req_2(data_structs):
+def req_2(data_structs, clase, via):
     """
     Función que soluciona el requerimiento 2
     """
-    # TODO: Realizar el requerimiento 2
-    pass
-
+    # TO DO: Realizar el requerimiento 2
+    
+    arbol = data_structs["dateIndex"]
+    dias = om.keySet(arbol)
+    lst_acc_via = lt.newList('ARRAY_LIST')
+    for dia in lt.iterator(dias):
+        key_value_dia = om.get(arbol,dia)
+        mapa_clase = me.getValue(key_value_dia)["clase"]
+        contains = mp.contains(mapa_clase,clase)
+        if contains:
+            acc_clase = mp.get(mapa_clase,clase)
+            lst_acc_clase = me.getValue(acc_clase)
+            for accidente in lt.iterator(lst_acc_clase):
+                if via in accidente["DIRECCION"]:
+                    lt.addLast(lst_acc_via,accidente)
+                    
+    numero_acc = lt.size(lst_acc_via)
+    lst_3_acc_recientes = lt.subList(lst_acc_via,numero_acc-2,3)
+    merg.sort(lst_3_acc_recientes,sort_criteria_date)
+    return lst_3_acc_recientes,numero_acc
 
 def req_3(data_structs):
     """
@@ -211,12 +228,18 @@ def req_8(data_structs):
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
-def compare(data_1, data_2):
+def compareHour(data_1, data_2):
     """
     Función encargada de comparar dos datos
     """
-    #TODO: Crear función comparadora de la lista
-    pass
+    #TO DO: Crear función comparadora de la lista
+    data_1 = data_1["HORA_OCURRENCIA_ACC"]
+    data_2 = data_2["HORA_OCURRENCIA_ACC"]
+    
+    if data_1 < data_2:
+        return True
+    else:
+        return False
 
 def compareDates(date1, date2):
     if (date1 == date2):
@@ -228,7 +251,7 @@ def compareDates(date1, date2):
 # Funciones de ordenamiento
 
 
-def sort_criteria(data_1, data_2):
+def sort_criteria_date(data_1, data_2):
     """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
 
     Args:
@@ -239,6 +262,13 @@ def sort_criteria(data_1, data_2):
         _type_: _description_
     """
     #TODO: Crear función comparadora para ordenar
+    data_1 = data_1["FECHA_OCURRENCIA_ACC"]
+    data_2 = data_2["FECHA_OCURRENCIA_ACC"]
+    
+    if data_1 > data_2:
+        return True
+    else:
+        return False
     pass
 
 

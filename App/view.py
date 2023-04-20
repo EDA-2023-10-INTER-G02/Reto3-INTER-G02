@@ -119,6 +119,23 @@ def print_tabla_req_1(lista):
         
     print(tab(lst_of_lsts,tablefmt='grid',headers=headerss,maxcolwidths=13))
         
+def print_tbala_req_2(lista):
+    lst_of_lsts = []
+    headerss = ["CODIGO_ACCIDENTE","FECHA_HORA_ACC","DIA_OCURRENCIA_ACC","LOCALIDAD","DIRECCION","GRAVEDAD","CLASE_ACC","LATITUD","LONGITUD"]
+    for accidente in lt.iterator(lista):
+        lista_acc = []
+        lista_acc.append(accidente["CODIGO_ACCIDENTE"])
+        lista_acc.append(accidente["FECHA_HORA_ACC"])
+        lista_acc.append(accidente["DIA_OCURRENCIA_ACC"])
+        lista_acc.append(accidente["LOCALIDAD"])
+        lista_acc.append(accidente["DIRECCION"])
+        lista_acc.append(accidente["GRAVEDAD"])
+        lista_acc.append(accidente["CLASE_ACC"])
+        lista_acc.append(accidente["LATITUD"])
+        lista_acc.append(accidente["LONGITUD"])
+        lst_of_lsts.append(lista_acc)
+        
+    print(tab(lst_of_lsts,tablefmt='grid',headers=headerss,maxcolwidths=13))
     
 def print_req_1(control):
     """
@@ -135,8 +152,12 @@ def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    # TO DO: Imprimir el resultado del requerimiento 2
+    clase = input("Ingrese la clase del accidente: ")
+    via = input("ingrese el nombre de la vía de la ciudad: ")
+    lst_3_acc,numero_acc = controller.req_2(control,clase,via)
+    print("\nHay " +str(numero_acc)+" accidentes de la clase " +clase+" ocurridos a lo largo de la vía "+via+" y los tres más recientes son: ")
+    print_tbala_req_2(lst_3_acc)
 
 
 def print_req_3(control):
