@@ -155,10 +155,11 @@ def print_req_2(control):
     # TO DO: Imprimir el resultado del requerimiento 2
     clase = input("Ingrese la clase del accidente: ")
     via = input("ingrese el nombre de la vía de la ciudad: ")
-    lst_3_acc,numero_acc = controller.req_2(control,clase,via)
+    rta,time = controller.req_2(control,clase,via)
+    lst_3_acc,numero_acc = rta
     print("\nHay " +str(numero_acc)+" accidentes de la clase " +clase+" ocurridos a lo largo de la vía "+via+" y los tres más recientes son: ")
     print_tbala_req_2(lst_3_acc)
-
+    print("Tiempo: "+str(time))
 
 def print_req_3(control):
     """
@@ -195,13 +196,14 @@ def print_req_6(control):
     longitud = float(input("Ingrese la longitud: "))
     radio = float(input("Ingrese el radio: "))
     cantidad = int(input("Ingrese el número de accidentes: "))
-    rta = controller.req_6(control,mes,año,latitud,longitud,radio,cantidad)
+    rta,time = controller.req_6(control,mes,año,latitud,longitud,radio,cantidad)
     if rta == 0:
         print("Intente con un número diferente de accidentes")
     else:
         print("\nLos " +str(cantidad)+" accidentes más cercanos al punto (" +str(latitud)+", "+str(longitud)+") dentro de un radio de "+str(radio)+" km para el mes de "+mes+" de "+str(año))
         print_tbala_req_2(rta)
-
+    print("Tiempo: "+str(time))
+    
 def print_req_7(control):
     """
         Función que imprime la solución del Requerimiento 7 en consola

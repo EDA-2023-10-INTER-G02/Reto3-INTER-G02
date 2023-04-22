@@ -93,7 +93,11 @@ def req_2(control,clase,via):
     Retorna el resultado del requerimiento 2
     """
     # TO DO: Modificar el requerimiento 2
-    return model.req_2(control,clase,via)
+    time_i = get_time()
+    rta = model.req_2(control,clase,via)
+    time_f = get_time()
+    total_time = delta_time(time_i,time_f)
+    return rta,total_time
 
 
 def req_3(control):
@@ -124,7 +128,11 @@ def req_6(control,mes,año,latitud,longitud,radio,cantidad):
     Retorna el resultado del requerimiento 6
     """
     # TO DO: Modificar el requerimiento 6
-    return model.req_6(control,mes,año,latitud,longitud,radio,cantidad)
+    time_i = get_time()
+    rta = model.req_6(control,mes,año,latitud,longitud,radio,cantidad)
+    time_f = get_time()
+    time = delta_time(time_i,time_f)
+    return rta,time
     
 
 
