@@ -41,6 +41,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 import datetime
 assert cf
+import math
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
@@ -158,7 +159,6 @@ def req_2(data_structs, clase, via):
     Función que soluciona el requerimiento 2
     """
     # TO DO: Realizar el requerimiento 2
-    
     arbol = data_structs["dateIndex"]
     dias = om.keySet(arbol)
     lst_acc_via = lt.newList('ARRAY_LIST')
@@ -202,14 +202,49 @@ def req_5(data_structs):
     pass
 
 
-def req_6(data_structs):
+def req_6(data_structs,mes,año,latitud,longitud,radio,cantidad):
     """
     Función que soluciona el requerimiento 6
     """
     # TODO: Realizar el requerimiento 6
-    pass
-
-
+    arbol = data_structs["dateIndex"]
+    meses = {"ENERO":1,"FEBRERO":2,"MARZO":3,"ABRIL":4,"MAYO":5,"JUNIO":6,"JULIO":7,"AGOSTO":8,"SEPTIEMBRE":9,"OCTUBRE":10,
+             "NOVIEMBRE":11,"DICIEMBRE":12}
+    mess = meses[mes]
+    if mes == "ENERO" or mes == "MARZO" or mes == "MAYO" or mes =="JULIO" or mes == "AGOSTO" or mes == "OCTUBRE" or mes == "DICIEMBRE":
+        dia_fin = 31
+    elif mes == "FEBRERO":
+        dia_fin = 28
+    else:
+        dia_fin = 30
+    fecha_i = datetime.datetime(año,mess,1)
+    fecha_f = datetime.datetime(año,mess,dia_fin)
+    dias = om.values(arbol,fecha_i.date(),fecha_f.date())
+    acc_zona = om.newMap(omaptype='RBT',comparefunction=compareDates)
+    for entry in lt.iterator(dias):
+        lst_accidents = entry["lstaccidentes"]
+        for accidente in lt.iterator(lst_accidents):
+            lat1 = (latitud*3.14)/180
+            lon1 = (longitud*3.14)/180
+            lat2 = (float(accidente["LATITUD"])*3.14)/180
+            lon2 = (float(accidente["LONGITUD"])*3.14)/180
+            sin2 = (math.sin((lat2-lat1)/2))**2
+            part2 = math.cos(lat1)*math.cos(lat2)*(math.sin((lon2-lon1)/2))**2
+            distancia = 2 * math.asin(math.sqrt(sin2 + part2)) * 6371
+            if distancia <= radio:
+                om.put(acc_zona,distancia,accidente)
+    llaves = om.keySet(acc_zona)
+    lst_acc_zona = lt.newList(datastructure='ARRAY_LIST')
+    for valor in lt.iterator(llaves):
+        key_value = om.get(acc_zona,valor)
+        accidente = me.getValue(key_value)
+        lt.addLast(lst_acc_zona,accidente)
+    if cantidad <= lt.size(lst_acc_zona):
+        sub_lst = lt.subList(lst_acc_zona,1,cantidad)
+    else:
+        sub_lst = 0
+    return sub_lst
+        
 def req_7(data_structs):
     """
     Función que soluciona el requerimiento 7

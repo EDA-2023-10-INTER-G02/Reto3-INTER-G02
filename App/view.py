@@ -188,15 +188,25 @@ def print_req_6(control):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 6
-    pass
-
+    # TO DO: Imprimir el resultado del requerimiento 6
+    mes = input("Ingrese un mes: ")
+    año = int(input("Ingrese un año: "))
+    latitud = float(input("Ingrese la latiud: "))
+    longitud = float(input("Ingrese la longitud: "))
+    radio = float(input("Ingrese el radio: "))
+    cantidad = int(input("Ingrese el número de accidentes: "))
+    rta = controller.req_6(control,mes,año,latitud,longitud,radio,cantidad)
+    if rta == 0:
+        print("Intente con un número diferente de accidentes")
+    else:
+        print("\nLos " +str(cantidad)+" accidentes más cercanos al punto (" +str(latitud)+", "+str(longitud)+") dentro de un radio de "+str(radio)+" km para el mes de "+mes+" de "+str(año))
+        print_tbala_req_2(rta)
 
 def print_req_7(control):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 7
+    # TO DO: Imprimir el resultado del requerimiento 
     pass
 
 
