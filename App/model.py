@@ -139,17 +139,18 @@ def req_1(data_structs,fecha_inicio,fecha_fin):
     """
     Función que soluciona el requerimiento 1
     """
-    # TODO: Realizar el requerimiento 1
+    # TO DO: Realizar el requerimiento 1
     fecha_i = datetime.datetime.strptime(fecha_inicio, "%Y/%m/%d")
     fecha_in = fecha_i.date()
     fecha_f = datetime.datetime.strptime(fecha_fin, "%Y/%m/%d")
     fecha_fi = fecha_f.date()
     entry = om.values(data_structs["dateIndex"], fecha_in, fecha_fi)
     total_accidentes = 0
-    lst_accidentes = lt.newList('ARRAY_LIST')
+    lst_accidentes = lt.newList(datastructure='SINGLE_LINKED')
     for date in lt.iterator(entry):
         total_accidentes += lt.size(date["lstaccidentes"])
-        lt.addLast(lst_accidentes,date["lstaccidentes"])
+        merg.sort(date["lstaccidentes"],compareHour2)
+        lt.addFirst(lst_accidentes, date["lstaccidentes"])
         
     return total_accidentes,lst_accidentes
 
@@ -206,7 +207,7 @@ def req_6(data_structs,mes,año,latitud,longitud,radio,cantidad):
     """
     Función que soluciona el requerimiento 6
     """
-    # TODO: Realizar el requerimiento 6
+    # TO DO: Realizar el requerimiento 6
     arbol = data_structs["dateIndex"]
     meses = {"ENERO":1,"FEBRERO":2,"MARZO":3,"ABRIL":4,"MAYO":5,"JUNIO":6,"JULIO":7,"AGOSTO":8,"SEPTIEMBRE":9,"OCTUBRE":10,
              "NOVIEMBRE":11,"DICIEMBRE":12}
@@ -220,27 +221,23 @@ def req_6(data_structs,mes,año,latitud,longitud,radio,cantidad):
     fecha_i = datetime.datetime(año,mess,1)
     fecha_f = datetime.datetime(año,mess,dia_fin)
     dias = om.values(arbol,fecha_i.date(),fecha_f.date())
-    acc_zona = om.newMap(omaptype='RBT',comparefunction=compareDates)
+    lst_acc = lt.newList(datastructure='ARRAY_LIST')
     for entry in lt.iterator(dias):
         lst_accidents = entry["lstaccidentes"]
         for accidente in lt.iterator(lst_accidents):
-            lat1 = (latitud*3.14)/180
-            lon1 = (longitud*3.14)/180
-            lat2 = (float(accidente["LATITUD"])*3.14)/180
-            lon2 = (float(accidente["LONGITUD"])*3.14)/180
+            lat2 = math.radians(float(accidente["LATITUD"]))
+            lon2 = math.radians(float(accidente["LONGITUD"]))
+            lat1 = math.radians(latitud)
+            lon1 = math.radians(longitud)
             sin2 = (math.sin((lat2-lat1)/2))**2
             part2 = math.cos(lat1)*math.cos(lat2)*(math.sin((lon2-lon1)/2))**2
             distancia = 2 * math.asin(math.sqrt(sin2 + part2)) * 6371
             if distancia <= radio:
-                om.put(acc_zona,distancia,accidente)
-    llaves = om.keySet(acc_zona)
-    lst_acc_zona = lt.newList(datastructure='ARRAY_LIST')
-    for valor in lt.iterator(llaves):
-        key_value = om.get(acc_zona,valor)
-        accidente = me.getValue(key_value)
-        lt.addLast(lst_acc_zona,accidente)
-    if cantidad <= lt.size(lst_acc_zona):
-        sub_lst = lt.subList(lst_acc_zona,1,cantidad)
+                accidente["Distancia"] = distancia
+                lt.addLast(lst_acc,accidente)
+    merg.sort(lst_acc,compareDistancia)
+    if cantidad <= lt.size(lst_acc):
+        sub_lst = lt.subList(lst_acc,1,cantidad)
     else:
         sub_lst = 0
     return sub_lst
@@ -275,7 +272,14 @@ def compareHour(data_1, data_2):
         return True
     else:
         return False
-
+    
+def compareHour2(data_1,data_2):
+    if datetime.datetime.strptime(data_1['FECHA_HORA_ACC'],'%Y/%m/%d %H:%M:%S+%f')>datetime.datetime.strptime(data_2['FECHA_HORA_ACC'],'%Y/%m/%d %H:%M:%S+%f'):
+        return True
+    else:
+        return False
+    
+    
 def compareDates(date1, date2):
     if (date1 == date2):
         return 0
@@ -283,6 +287,16 @@ def compareDates(date1, date2):
         return 1
     else:
         return -1
+    
+def compareDistancia(data1,data2):
+    data_1 = float(data1["Distancia"])
+    data_2 = float(data2["Distancia"])
+    
+    if data_1 < data_2:
+        return True
+    else:
+        return False
+    
 # Funciones de ordenamiento
 
 
@@ -314,8 +328,3 @@ def sort(data_structs):
     #TODO: Crear función de ordenamiento
     pass
 
-"""mapa = om.newMap(omaptype="RBT")
-om.put(mapa,"bad bunny","agosto")
-llave_valor = om.get(mapa,"bad bunny")
-valor = me.getValue(llave_valor)
-print(valor)"""

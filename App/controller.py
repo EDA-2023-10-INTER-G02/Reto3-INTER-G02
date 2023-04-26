@@ -85,7 +85,16 @@ def req_1(control, fecha_inicio, fecha_fin):
     Retorna el resultado del requerimiento 1
     """
     # TO DO: Modificar el requerimiento 1
-    return model.req_1(control,fecha_inicio,fecha_fin) 
+    time_i = get_time()
+    #tracemalloc.start()
+    #mem_i = get_memory()
+    rta = model.req_1(control,fecha_inicio,fecha_fin)
+    #mem_f = get_memory()
+    #tracemalloc.stop()
+    time_f = get_time()
+    total_time = delta_time(time_i,time_f)
+    #total_mem = delta_memory(mem_f,mem_i)
+    return rta,total_time
 
 
 def req_2(control,clase,via):
@@ -94,9 +103,14 @@ def req_2(control,clase,via):
     """
     # TO DO: Modificar el requerimiento 2
     time_i = get_time()
+    #tracemalloc.start()
+    #memory_i = get_memory()
     rta = model.req_2(control,clase,via)
+    #memory_f = get_memory()
+    #tracemalloc.stop()
     time_f = get_time()
     total_time = delta_time(time_i,time_f)
+    #final_mem = delta_memory(memory_f,memory_i)
     return rta,total_time
 
 
@@ -129,9 +143,14 @@ def req_6(control,mes,año,latitud,longitud,radio,cantidad):
     """
     # TO DO: Modificar el requerimiento 6
     time_i = get_time()
+    #tracemalloc.start()
+    #memory_i = get_memory()
     rta = model.req_6(control,mes,año,latitud,longitud,radio,cantidad)
+    #memory_f = get_memory()
+    #tracemalloc.stop()
     time_f = get_time()
     time = delta_time(time_i,time_f)
+    #final_mem = delta_memory(memory_f,memory_i)
     return rta,time
     
 

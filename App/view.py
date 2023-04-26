@@ -144,10 +144,12 @@ def print_req_1(control):
     # TO DO: Imprimir el resultado del requerimiento 1
     fecha_inicio = input("Ingrese una fecha de inicio: ")
     fecha_fin = input("Ingrese una fecha de fin: ")
-    total_acc, lst_acc = controller.req_1(control,fecha_inicio,fecha_fin)
+    rta, total_time = controller.req_1(control,fecha_inicio,fecha_fin)
+    total_acc,lst_acc = rta
     print("\nHay " +str(total_acc)+" accidentes registrados entre " +fecha_inicio+ " y " + fecha_fin)
     print_tabla_req_1(lst_acc)
-
+    print("Memoria: "+str(total_time))
+    
 def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
@@ -192,7 +194,7 @@ def print_req_6(control):
     # TO DO: Imprimir el resultado del requerimiento 6
     mes = input("Ingrese un mes: ")
     año = int(input("Ingrese un año: "))
-    latitud = float(input("Ingrese la latiud: "))
+    latitud = float(input("Ingrese la latitud: "))
     longitud = float(input("Ingrese la longitud: "))
     radio = float(input("Ingrese el radio: "))
     cantidad = int(input("Ingrese el número de accidentes: "))
