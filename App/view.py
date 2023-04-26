@@ -224,7 +224,7 @@ def print_req_6(control):
         print_tbala_req_2(rta)
     print("Tiempo: "+str(time))
     
-def print_req_7(control):
+def print_req_7(control,mes,ano):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
