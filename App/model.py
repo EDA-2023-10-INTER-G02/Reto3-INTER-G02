@@ -204,7 +204,7 @@ def req_4(data_structs, gravedad, fecha_in, fecha_fi):
                 lt.addFirst(top, accidente)
     top_5 = lt.newList(datastructure='ARRAY_LIST')
     info = ["CODIGO_ACCIDENTE","FECHA_HORA_ACC","DIA_OCURRENCIA_ACC","LOCALIDAD","DIRECCION","CLASE_ACC","LATITUD","LONGITUD"]
-    for acci in lt.subList(top,1,5)["elements"]:
+    for acci in lt.iterator(lt.subList(top,1,5)):
         lt.addLast(top_5,{})
         for i in info:
             top_5["elements"][lt.size(top_5)-1][i]=acci[i]
