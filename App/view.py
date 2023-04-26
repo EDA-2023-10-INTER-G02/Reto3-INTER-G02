@@ -30,6 +30,9 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 assert cf
 from tabulate import tabulate as tab
+import matplotlib.pyplot as plt
+from IPython.display import display
+import folium
 import traceback
 default_limit = 1000 
 sys.setrecursionlimit(default_limit*10)
@@ -99,6 +102,16 @@ def opciones_tamaño():
     tamano = int(input("Elija el tamaño del archivo:\n1.Small (1%)\n2.5%\n3.10%\n4.20%\n5.30%\n6.50%\n7.80%\n8.Large (100%)\n"))
     tamanos=["small.csv","5pct.csv","10pct.csv","20pct.csv","30pct.csv","50pct.csv","80pct.csv","large.csv"]
     return tamanos[tamano-1]
+
+def fechas(fecha_in,fecha_fi):
+    if fecha_in == "" or fecha_fi == "":
+        fecha_in = input("Escribir la fecha inicial: ")
+        fecha_fi = input("Escribir la fecha final: ")
+    while (fecha_in[4] != "/" or fecha_in[7] != "/") or (fecha_fi[4] != "/" or fecha_fi[7] != "/"):
+        print("Alguna fecha quedó mal escrita, vuelva a hacerlo")
+        fecha_in = input("Escribir la fecha inicial: ")
+        fecha_fi = input("Escribir la fecha final: ")
+    return fecha_in,fecha_fi
 
 def print_tabla_req_1(lista):
     lst_of_lsts = []
@@ -171,12 +184,17 @@ def print_req_3(control):
     pass
 
 
-def print_req_4(control):
+def print_req_4(control, gravedad, fecha_in, fecha_fi):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 4
-    pass
+    top5, cantidad = controller.req_4(control, gravedad, fecha_in, fecha_fi)
+    print("=============== Req No. 4 Inputs ===============")
+    print("Reporte de los 5 accidentes con '" + gravedad + "' más recientes entre '" + fecha_in + "' y '" + fecha_fi + "'\n")
+    print("=============== Req No. 4 Answer ===============")
+    print("Hay ", str(cantidad), " accidentes entre las fechas '" + fecha_in + "' y '" + fecha_fi + "'\n")
+    print(tab(top5["elements"], headers="keys", tablefmt='grid', maxcolwidths=13))
 
 
 def print_req_5(control):
@@ -210,16 +228,33 @@ def print_req_7(control):
     """
         Función que imprime la solución del Requerimiento 7 en consola
     """
-    # TO DO: Imprimir el resultado del requerimiento 
-    pass
+    # TODO: Imprimir el resultado del requerimiento 7
+    accidentes, horas, cantidad = controller.req_7(control,mes,ano)
+    print("=============== Req No. 7 Answer ===============")
+    print("Accidentes más tempranos y tardíos para el mes de", mes, "de", ano)
+    for dia in accidentes:
+        print("Accidentes del día " + dia)
+        print(tab(accidentes[dia]["elements"], headers="keys", tablefmt='grid', maxcolwidths=13))
+    plt.bar(list(horas.keys()),list(horas.values()))
+    plt.xticks(rotation=90)
+    plt.title("Frecuencia de " + str(cantidad) + " accidentes por hora del día\nPara el mes de " + mes + " de " + ano)
+    plt.xlabel("Hora del día")
+    plt.ylabel("Número de accidentes")
+    plt.show()
 
 
-def print_req_8(control):
+def print_req_8(control,clase,fecha_in,fecha_fi):
     """
         Función que imprime la solución del Requerimiento 8 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 8
-    pass
+    cantidad, accidentes = controller.req_8(control,clase,fecha_in,fecha_fi)
+    print("=============== Req No. 8 Answer ===============")
+    print("Hay " + str(cantidad) + " accidentes entre las fechas '" + fecha_in + "' y '" + fecha_fi +"'")
+    mapa = folium.Map(location=[accidentes["elements"][0]["LATITUD"], accidentes["elements"][0]["LONGITUD"]])
+    for accidente in lt.iterator(accidentes):
+        folium.Marker(location=[accidente["LATITUD"], accidente["LONGITUD"]], popup="CODIGO_ACCIDENTE: " + accidente["CODIGO_ACCIDENTE"]).add_to(mapa)
+    mapa.save("accidentes.html")
 
 
 # Se crea el controlador asociado a la vista
@@ -259,7 +294,9 @@ if __name__ == "__main__":
                 print_req_3(control)
 
             elif int(inputs) == 5:
-                print_req_4(control)
+                gravedad = input("Escribir la gravedad a analizar: ")
+                fecha_in,fecha_fi = fechas("", "")
+                print_req_4(control, gravedad, fecha_in, fecha_fi)
 
             elif int(inputs) == 6:
                 print_req_5(control)
@@ -268,10 +305,14 @@ if __name__ == "__main__":
                 print_req_6(control)
 
             elif int(inputs) == 8:
-                print_req_7(control)
+                mes = input("Escribir el mes: ")
+                ano = input("Escribir el año: ")
+                print_req_7(control,mes,ano)
 
             elif int(inputs) == 9:
-                print_req_8(control)
+                clase = input("Escribir la clase a analizar: ")
+                fecha_in,fecha_fi = fechas("", "")
+                print_req_8(control,clase,fecha_in,fecha_fi)
 
             elif int(inputs) == 0:
                 working = False

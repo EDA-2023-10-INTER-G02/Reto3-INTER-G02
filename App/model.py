@@ -187,12 +187,28 @@ def req_3(data_structs):
     pass
 
 
-def req_4(data_structs):
+def req_4(data_structs, gravedad, fecha_in, fecha_fi):
     """
     Función que soluciona el requerimiento 4
     """
     # TODO: Realizar el requerimiento 4
-    pass
+    top = lt.newList(datastructure='ARRAY_LIST')
+    fecha_i = datetime.datetime.strptime(fecha_in, "%Y/%m/%d")
+    fecha_in = fecha_i.date()
+    fecha_f = datetime.datetime.strptime(fecha_fi, "%Y/%m/%d")
+    fecha_fi = fecha_f.date()
+    accidentes = om.values(data_structs["dateIndex"], fecha_in,fecha_fi)
+    for accident in lt.iterator(accidentes):
+        for accidente in lt.iterator(accident["lstaccidentes"]):
+            if accidente["GRAVEDAD"] == gravedad:
+                lt.addFirst(top, accidente)
+    top_5 = lt.newList(datastructure='ARRAY_LIST')
+    info = ["CODIGO_ACCIDENTE","FECHA_HORA_ACC","DIA_OCURRENCIA_ACC","LOCALIDAD","DIRECCION","CLASE_ACC","LATITUD","LONGITUD"]
+    for acci in lt.subList(top,1,5)["elements"]:
+        lt.addLast(top_5,{})
+        for i in info:
+            top_5["elements"][lt.size(top_5)-1][i]=acci[i]
+    return top_5, lt.size(top)
 
 
 def req_5(data_structs):
@@ -247,18 +263,77 @@ def req_7(data_structs):
     Función que soluciona el requerimiento 7
     """
     # TODO: Realizar el requerimiento 7
-    pass
+    accidents = {}
+    cantidad = 0
+    horas = {"0:00:00": 0, "1:00:00": 0, "2:00:00": 0, "3:00:00": 0, "4:00:00": 0, "5:00:00": 0, "6:00:00": 0, "7:00:00": 0, "8:00:00": 0, "9:00:00": 0, "10:00:00": 0, "11:00:00": 0, "12:00:00": 0, "13:00:00": 0, "14:00:00": 0, "15:00:00": 0, "16:00:00": 0, "17:00:00": 0, "18:00:00": 0, "19:00:00": 0, "20:00:00": 0, "21:00:00": 0, "22:00:00": 0, "23:00:00": 0}
+    meses = {"ENERO": "01", "FEBRERO": "02", "MARZO": "03", "ABRIL": "04", "MAYO": "05", "JUNIO": "06", "JULIO": "07", "AGOSTO": "08", "SEPTIEMBRE": "09", "OCTUBRE": "10", "NOVIEMBRE": "11", "DICIEMBRE": "12"}
+    fecha_i = datetime.datetime.strptime(ano+"/"+meses[mes]+"/01", "%Y/%m/%d")
+    fecha_in = fecha_i.date()
+    fecha_f = datetime.datetime.strptime(ano+"/"+meses[mes]+"/31", "%Y/%m/%d")
+    fecha_fi = fecha_f.date()
+    accidentes = om.values(data_structs["dateIndex"], fecha_in,fecha_fi)
+    for accident in lt.iterator(accidentes):
+        for accidente in lt.iterator(accident["lstaccidentes"]):
+            if accidente["FECHA_OCURRENCIA_ACC"] not in accidents:
+                accidents[accidente["FECHA_OCURRENCIA_ACC"]] = lt.newList(datastructure='ARRAY_LIST')
+                lt.addLast(accidents[accidente["FECHA_OCURRENCIA_ACC"]], accidente)
+            else:
+                lt.addLast(accidents[accidente["FECHA_OCURRENCIA_ACC"]], accidente)
+            cantidad += 1
+            if ":" in accidente["HORA_OCURRENCIA_ACC"][:2]:
+                horas[accidente["HORA_OCURRENCIA_ACC"][:1] + ":00:00"] += 1
+            else:
+                horas[accidente["HORA_OCURRENCIA_ACC"][:2] + ":00:00"] += 1
+    primero_ultimo = {}
+    info = ["CODIGO_ACCIDENTE","FECHA_HORA_ACC","DIA_OCURRENCIA_ACC","LOCALIDAD","DIRECCION","GRAVEDAD","CLASE_ACC","LATITUD","LONGITUD"]
+    for fecha in accidents:
+        primero_ultimo[fecha] = lt.newList(datastructure='ARRAY_LIST')
+        sa.sort(accidents[fecha],sort_req7)
+        lt.addLast(primero_ultimo[fecha],{})
+        for inf in info:
+            primero_ultimo[fecha]["elements"][0][inf] = lt.firstElement(accidents[fecha])[inf]
+        lt.addLast(primero_ultimo[fecha],{})
+        for inf in info:
+            primero_ultimo[fecha]["elements"][1][inf] = lt.lastElement(accidents[fecha])[inf]
+    return primero_ultimo, horas, cantidad
 
 
-def req_8(data_structs):
+def req_8(data_structs,clase,fecha_in,fecha_fi):
     """
     Función que soluciona el requerimiento 8
     """
     # TODO: Realizar el requerimiento 8
-    pass
+    cantidad = 0
+    accs = lt.newList(datastructure='ARRAY_LIST')
+    fecha_i = datetime.datetime.strptime(fecha_in, "%Y/%m/%d")
+    fecha_in = fecha_i.date()
+    fecha_f = datetime.datetime.strptime(fecha_fi, "%Y/%m/%d")
+    fecha_fi = fecha_f.date()
+    accidentes = om.values(data_structs["dateIndex"], fecha_in,fecha_fi)
+    for accident in lt.iterator(accidentes):
+        for accidente in lt.iterator(accident["lstaccidentes"]):
+            if accidente["CLASE_ACC"] == clase:
+                lt.addLast(accs, accidente)
+                cantidad += 1
+    return cantidad,accs
+                
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def comparar(data_1, data_2, id):
+    if data_1[id] > data_2[id]:
+        return True
+    else:
+        return False
+    
+def compararHora(data_1, data_2):
+    hora1 = datetime.datetime.strptime(data_1["HORA_OCURRENCIA_ACC"], "%H:%M:%S" ).time()
+    hora2 = datetime.datetime.strptime(data_2["HORA_OCURRENCIA_ACC"], "%H:%M:%S" ).time()
+    if hora1 < hora2:
+        return True
+    elif hora1 > hora2:
+        return False
 
 def compareHour(data_1, data_2):
     """
@@ -328,3 +403,17 @@ def sort(data_structs):
     #TODO: Crear función de ordenamiento
     pass
 
+def sort_req4(data_1, data_2):
+    return comparar(data_1, data_2, "FECHA_HORA_ACC")
+
+def sort_req7(data_1, data_2):
+    return compararHora(data_1, data_2)
+
+def sort_req8(data_1, data_2):
+    return comparar(data_1, data_2, "FECHA_OCURRENCIA_ACC")
+
+"""mapa = om.newMap(omaptype="RBT")
+om.put(mapa,"bad bunny","agosto")
+llave_valor = om.get(mapa,"bad bunny")
+valor = me.getValue(llave_valor)
+print(valor)"""

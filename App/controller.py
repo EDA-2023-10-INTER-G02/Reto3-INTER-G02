@@ -122,12 +122,12 @@ def req_3(control):
     pass
 
 
-def req_4(control):
+def req_4(control, gravedad, fecha_in, fecha_fi):
     """
     Retorna el resultado del requerimiento 4
     """
     # TODO: Modificar el requerimiento 4
-    pass
+    return model.req_4(control, gravedad, fecha_in, fecha_fi)
 
 
 def req_5(control):
@@ -155,20 +155,20 @@ def req_6(control,mes,año,latitud,longitud,radio,cantidad):
     
 
 
-def req_7(control):
+def req_7(control,mes,ano):
     """
     Retorna el resultado del requerimiento 7
     """
     # TODO: Modificar el requerimiento 7
-    pass
+    return model.req_7(control,mes,ano)
 
 
-def req_8(control):
+def req_8(control,clase,fecha_in,fecha_fi):
     """
     Retorna el resultado del requerimiento 8
     """
     # TODO: Modificar el requerimiento 8
-    pass
+    return model.req_8(control,clase,fecha_in,fecha_fi)
 
 
 # Funciones para medir tiempos de ejecucion
