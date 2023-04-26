@@ -148,7 +148,7 @@ def print_req_1(control):
     total_acc,lst_acc = rta
     print("\nHay " +str(total_acc)+" accidentes registrados entre " +fecha_inicio+ " y " + fecha_fin)
     print_tabla_req_1(lst_acc)
-    print("Memoria: "+str(total_time))
+    print("Tiempo: "+str(total_time))
     
 def print_req_2(control):
     """
