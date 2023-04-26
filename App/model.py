@@ -258,7 +258,7 @@ def req_6(data_structs,mes,año,latitud,longitud,radio,cantidad):
         sub_lst = 0
     return sub_lst
         
-def req_7(data_structs):
+def req_7(data_structs,mes,ano):
     """
     Función que soluciona el requerimiento 7
     """
